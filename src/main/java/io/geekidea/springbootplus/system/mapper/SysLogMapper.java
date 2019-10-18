@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.geekidea.springbootplus.system.entity.SysLog;
-import io.geekidea.springbootplus.system.web.param.SysLogQueryParam;
-import io.geekidea.springbootplus.system.web.vo.SysLogQueryVo;
+import io.geekidea.springbootplus.system.param.SysLogQueryParam;
+import io.geekidea.springbootplus.system.vo.SysLogQueryVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -17,13 +17,14 @@ import java.io.Serializable;
  * </p>
  *
  * @author geekidea
- * @since 2019-08-04
+ * @since 2019-10-11
  */
 @Repository
 public interface SysLogMapper extends BaseMapper<SysLog> {
 
     /**
      * 根据ID获取查询对象
+     *
      * @param id
      * @return
      */
@@ -31,6 +32,7 @@ public interface SysLogMapper extends BaseMapper<SysLog> {
 
     /**
      * 获取分页对象
+     *
      * @param page
      * @param sysLogQueryParam
      * @return

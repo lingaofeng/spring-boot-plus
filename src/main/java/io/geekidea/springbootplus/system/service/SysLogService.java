@@ -2,9 +2,9 @@ package io.geekidea.springbootplus.system.service;
 
 import io.geekidea.springbootplus.system.entity.SysLog;
 import io.geekidea.springbootplus.common.service.BaseService;
-import io.geekidea.springbootplus.system.web.param.SysLogQueryParam;
-import io.geekidea.springbootplus.system.web.vo.SysLogQueryVo;
-import io.geekidea.springbootplus.common.web.vo.Paging;
+import io.geekidea.springbootplus.system.param.SysLogQueryParam;
+import io.geekidea.springbootplus.system.vo.SysLogQueryVo;
+import io.geekidea.springbootplus.common.vo.Paging;
 
 import java.io.Serializable;
 
@@ -14,12 +14,13 @@ import java.io.Serializable;
  * </p>
  *
  * @author geekidea
- * @since 2019-08-04
+ * @since 2019-10-11
  */
 public interface SysLogService extends BaseService<SysLog> {
 
     /**
      * 根据ID获取查询对象
+     *
      * @param id
      * @return
      */
@@ -27,6 +28,7 @@ public interface SysLogService extends BaseService<SysLog> {
 
     /**
      * 获取分页对象
+     *
      * @param sysLogQueryParam
      * @return
      */

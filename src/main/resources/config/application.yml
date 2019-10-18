@@ -1,15 +1,15 @@
 # spring-boot-plus Common Config
 
-############################# 访问路径、端口tomcat start ############################
+############################# 访问路径、端口tomcat start #############################
 server:
   port: 8888
   servlet:
-    context-path: /api
+    context-path: /
   tomcat:
     max-threads: 1000
     min-spare-threads: 30
     uri-encoding: UTF-8
-############################# 访问路径、端口tomcat end ##############################
+############################# 访问路径、端口tomcat end ###############################
 
 
 ################################ spring config start ###############################
@@ -33,42 +33,44 @@ spring:
 spring:
   profiles:
     active: '@profileActive@'
-################################ spring config end ################################
+################################ spring config end #################################
 
 
-############################## spring-boot-plus start #############################
+############################## spring-boot-plus start ##############################
 spring-boot-plus:
-  # jwt配置
-  jwt:
-    header: token
-    secret: 666666
-    issuer: spring-boot-plus
-    subject: spring-boot-plus-jwt
-    audience: web
-    expire-minutes: 2
+  # 是否启用ansi控制台输出有颜色的字体
+  enable-ansi: true
+  # 请求日志在控制台是否格式化输出
+  request-log-format: true
+  # 响应日志在控制台是否格式化输出
+  response-log-format: true
+  # 过滤器配置
+  filter:
+    # 请求路径Filter配置
+    request-path:
+      enabled: true
+      include-paths: /**
+      # 排除路径，多行字符串配置
+      exclude-paths: |
+        /applications/**,/actuator/**,/instances/**,/logfile,/sba-settings.js,/assets/img/favicon.png,
+        /swagger-ui.html,/swagger-resources/**,/webjars/springfox-swagger-ui/**,/v2/api-docs,
+        /druid/**,/favicon.ico
   # 拦截器配置
-  interceptor-config:
-    jwt-config:
+  interceptor:
+    permission:
       enabled: false
-      include-path: /**
-      exclude-path: /swagger-resources/**,/api-docs/**,/v2/api-docs/**,/login,/verificationCode,/doc/**,/error/**,/docs,/test/**,/resource/**
-    permission-config:
-      enabled: false
-      include-path: /**
-      exclude-path: /swagger-resources/**,/api-docs/**,/v2/api-docs/**,/adminLogin,/sysLogin,/login.html,/verificationCode,/doc/**,/error/**,/docs,/resource/**
-    token-timeout-config:
-      enabled: false
-      include-path: /**
-      exclude-path: /swagger-resources/**,/api-docs/**,/v2/api-docs/**,/docs,/resource/**
-    resource-config:
+      include-paths: /**
+      exclude-paths: /swagger-resources/**,/api-docs/**,/v2/api-docs/**,/adminLogin,/sysLogin,/login.html,/verificationCode,/doc/**,/error/**,/docs,/resource/**
+    resource:
       enabled: true
-      include-path: ${spring-boot-plus.resource-access-patterns}
-    upload-config:
+      include-paths: ${spring-boot-plus.resource-access-patterns}
+    upload:
       enabled: true
-      include-path: /upload/**
-    download-config:
+      include-paths: /upload/**
+    download:
       enabled: true
-      include-path: /download/**
+      include-paths: /download/**
+
   # 文件上传下载配置
   # 上传路径配置
   upload-path: /opt/upload/
@@ -81,6 +83,92 @@ spring-boot-plus:
   # 全局允许上传的类型
   allow-upload-file-extensions: jpg,png,docx,xlsx,pptx,pdf
   allow-download-file-extensions: jpg,png,docx,xlsx,pptx,pdf
+
+  ############################ CORS start ############################
+  # CORS跨域配置，默认允许跨域
+  cors:
+    # 是否启用跨域，默认启用
+    enable: true
+    # CORS过滤的路径，默认：/**
+    path: /**
+    # 允许访问的源
+    allowed-origins: '*'
+    # 允许访问的请求头
+    allowed-headers: x-requested-with,content-type,token
+    # 是否允许发送cookie
+    allow-credentials: true
+    # 允许访问的请求方式
+    allowed-methods: OPTION,GET,POST
+    # 允许响应的头
+    exposed-headers: token
+    # 该响应的有效时间默认为30分钟，在有效时间内，浏览器无须为同一请求再次发起预检请求
+    max-age: 1800
+
+  ############################ CORS end ##############################
+
+  ########################## Resource start ##########################
+  # 静态资源访问配置
+  resource-handlers: |
+    /static/**=classpath:/static/
+    /templates/**=classpath:/templates/
+    swagger-ui.html=classpath:/META-INF/resources/
+    /webjars/**=classpath:/META-INF/resources/webjars/
+  ########################## Resource end ############################
+
+  ######################## Spring Shiro start ########################
+  shiro:
+    # shiro ini 多行字符串配置
+    filter-chain-definitions: |
+      /=anon
+      /static/**=anon
+      /templates/**=anon
+      /druid/**=anon
+      /hello/world=anon
+      /ip/**=anon
+      /sysLog/**=anon
+    # 权限配置
+    permission:
+        # 排除登陆登出相关
+      - urls: /login,/logout
+        permission: anon
+        # 排除静态资源
+      - urls: /static/**,/templates/**
+        permission: anon
+        # 排除Swagger
+      - urls: /docs,/swagger-ui.html,/webjars/springfox-swagger-ui/**,/swagger-resources/**,/v2/api-docs
+        permission: anon
+        # 排除SpringBootAdmin
+      - urls: /,/favicon.ico,/actuator/**,/instances/**,/assets/**,/sba-settings.js,/applications/**
+        permission: anon
+        # 测试
+      - url: /sysUser/getPageList
+        permission: anon
+  ######################## Spring Shiro end ##########################
+
+  ############################ JWT start #############################
+  jwt:
+    # token请求头名称
+    token-name: token
+    # jwt密钥
+    secret: 666666
+    # 发行人
+    issuer: spring-boot-plus
+    # 观众
+    audience: web
+    # 默认过期时间1小时，单位：秒
+    expire-second: 3600
+    # 是否刷新token
+    refresh-token: true
+    # 刷新token的时间间隔，默认10分钟，单位：秒
+    refresh-token-countdown: 600
+    # redis校验jwt token是否存在,可选
+    redis-check: true
+    # true: 同一个账号只能是最后一次登陆token有效，false：同一个账号可多次登陆
+    single-login: false
+    # 盐值校验，如果不加自定义盐值，则使用secret校验
+    salt-check: true
+  ############################ JWT end ###############################
+
 ############################### spring-boot-plus end ###############################
 
 
@@ -95,10 +183,10 @@ mybatis-plus:
       logic-delete-value: 0
       logic-not-delete-value: 1
   mapper-locations: classpath*:mapper/**/*Mapper.xml
-################################ mybatis-plus end #################################
+################################ mybatis-plus end ##################################
 
 
-############################### DRUID数据源配置 start ##############################
+############################### DRUID数据源配置 start ################################
 ---
 spring:
   datasource:
@@ -133,7 +221,8 @@ spring:
       test-on-return: false
       test-while-idle: true
       time-between-eviction-runs-millis: 60000
-      validation-query: SELECT 1 FROM DUAL
+      validation-query: SELECT 1
+      validation-query-timeout: 60000
     type: com.alibaba.druid.pool.DruidDataSource
 ############################### DRUID数据源配置 end ################################
 
@@ -142,12 +231,6 @@ spring:
 ---
 spring:
   redis:
-    jedis:
-      pool:
-        max-active: 2000
-        max-wait: -1ms
-        min-idle: 8
-        max-idle: 200
     timeout: 10s
     lettuce:
       pool:
@@ -159,7 +242,7 @@ spring:
 ############################### Redis 公共配置 end ##################################
 
 
-#################################### Swagger start ####################################
+#################################### Swagger start #################################
 # swagger配置
 swagger:
   base:
@@ -172,10 +255,10 @@ swagger:
   title: spring-boot-plus
   url: ''
   version: 1.0
-#################################### Swagger end #####################################
+#################################### Swagger end ###################################
 
 
-################################ Spring boot admin start ################################
+############################## Spring boot admin start ##############################
 ---
 spring:
   boot:
@@ -207,4 +290,4 @@ info:
   project-spring-boot-version: '@spring-boot.version@'
   project-mybatis-plus-version: '@mybatis-plus-boot-starter.version@'
   project-version: '@project.version@'
-################################ Spring boot admin end #################################
+############################## Spring boot admin end ###############################

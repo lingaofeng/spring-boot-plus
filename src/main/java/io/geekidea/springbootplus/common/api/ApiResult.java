@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2019-2029 geekidea(https://github.com/geekidea)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -93,7 +93,11 @@ public class ApiResult<T> implements Serializable {
         return result(ApiCode.SUCCESS,data);
     }
 
-    public static ApiResult ok(String key,Object value){
+    public static ApiResult ok(Object data,String msg){
+        return result(ApiCode.SUCCESS,msg,data);
+    }
+
+    public static ApiResult okMap(String key,Object value){
         Map<String,Object> map = new HashMap<>();
         map.put(key,value);
         return ok(map);
@@ -122,4 +126,7 @@ public class ApiResult<T> implements Serializable {
         return result(ApiCode.FAIL,map);
     }
 
+    public static ApiResult fail() {
+        return fail(ApiCode.FAIL);
+    }
 }

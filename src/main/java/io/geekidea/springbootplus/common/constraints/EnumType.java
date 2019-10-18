@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2019-2029 geekidea(https://github.com/geekidea)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,7 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * 自定义邮箱正则验证注解
+ * 枚举类型注解
  * @author geekidea
  * @date 2018-11-08
  */

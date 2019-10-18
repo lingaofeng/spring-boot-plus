@@ -7,12 +7,16 @@
         log_id, type, content, create_id, create_time
     </sql>
 
-    <select id="getSysLogById" resultType="io.geekidea.springbootplus.system.web.vo.SysLogQueryVo">
-        select <include refid="Base_Column_List"/> from sys_log where log_id = #{id}
+    <select id="getSysLogById" resultType="io.geekidea.springbootplus.system.vo.SysLogQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_log where log_id = #{id}
     </select>
 
-    <select id="getSysLogPageList" resultType="io.geekidea.springbootplus.system.web.vo.SysLogQueryVo">
-        select <include refid="Base_Column_List"/> from sys_log
+    <select id="getSysLogPageList" resultType="io.geekidea.springbootplus.system.vo.SysLogQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_log
     </select>
 
 </mapper>

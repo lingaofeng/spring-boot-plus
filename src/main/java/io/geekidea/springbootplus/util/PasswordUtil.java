@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2019-2029 geekidea(https://github.com/geekidea)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,22 +22,19 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * 密码加密工具类
+ *
  * @author geekidea
  * @date 2018-11-08
  */
 @Slf4j
 public class PasswordUtil {
-    private static final String KEY = "io.geekidea.springbootplus.springbootplus.pwd.key";
-    public static String encrypt(String pwd){
-        if (StringUtils.isBlank(pwd)){
+    private static final String KEY = "666666";
+
+    public static String encrypt(String pwd) {
+        if (StringUtils.isBlank(pwd)) {
             return null;
         }
-        pwd = pwd + KEY;
-        String newPwd = DigestUtils.sha256Hex(pwd) + DigestUtils.md5Hex(pwd);
-        return newPwd;
+        return DigestUtils.sha256Hex(KEY + pwd);
     }
 
-    public static void main(String[] args) {
-        log.debug(encrypt("7c4a8d09ca3762af61e59520943dc26494f8941b"));
-    }
 }

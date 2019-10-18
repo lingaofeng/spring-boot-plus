@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2019-2029 geekidea(https://github.com/geekidea)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -72,7 +72,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.OK)
     public ApiResult sysLoginExceptionHandler(SysLoginException exception) {
         log.warn("系统登录异常:" + exception.getMessage());
-        return ApiResult.fail(ApiCode.SYSTEM_LOGIN_EXCEPTION);
+        return ApiResult.fail(ApiCode.LOGIN_EXCEPTION);
     }
 
 

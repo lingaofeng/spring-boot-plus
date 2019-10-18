@@ -34,26 +34,36 @@ IS_UPDATE=0
 # 如果没有，则clone
 if [ ! -d "spring-boot-plus" ]; then
   git clone https://github.com/geekidea/spring-boot-plus.git
+  cd spring-boot-plus
 else
+  cd spring-boot-plus
   # 拉取代码，并获取结果判断，是否有新的代码更新，如果有，则备份之前的server，否则替换
   PULL_RESULT=$(git pull)
   echo "${PULL_RESULT}"
 
   if [[ ! $PULL_RESULT == *up-to-date* ]]
   then
-    echo "Update code..."
+    echo "update code..."
     IS_UPDATE=1
   fi
 fi
 
-cd spring-boot-plus
+pwd
 
 # 2. maven打包
 mvn clean
-mvn clean package -Ptest
+mvn package -Ptest
+
+pwd
+# 判断是否生成成功
+if [ ! -f "target/spring-boot-plus-server-assembly.tar.gz" ]; then
+  echo "maven build fail"
+  exit
+fi
 
 # 3. 停服
 cd ..
+pwd
 
 if [ -d "spring-boot-plus-server" ]; then
   sh spring-boot-plus-server/bin/shutdown.sh
@@ -68,20 +78,22 @@ fi
 
 if [[ $IS_UPDATE == 1 ]]
 then
-	echo "Back spring-boot-plus-server..."
+	echo "back spring-boot-plus-server..."
   mv spring-boot-plus-server spring-boot-plus-server-back/spring-boot-plus-server-back-"${NOW}"
+  echo "back success"
 fi
 
-echo "Copy spring-boot-plus-server-assembly.tar.gz..."
+echo "copy spring-boot-plus-server-assembly.tar.gz..."
 # 复制到项目同级目录，如果有，则覆盖
 cp -r -f spring-boot-plus/target/spring-boot-plus-server-assembly.tar.gz spring-boot-plus-server-assembly.tar.gz
+echo "copy success"
 
+pwd
 # 5. 运行spring-boot-plus
 tar -zxvf spring-boot-plus-server-assembly.tar.gz
-cd spring-boot-plus-server/bin
-sh restart.sh
+echo "tar.gz decompression success"
 
-# 6. 访问项目
-# 输出项目日志
-# http://localhost:8888/docs
+pwd
+sh spring-boot-plus-server/bin/shutdown.sh
+sh spring-boot-plus-server/bin/startup.sh
 

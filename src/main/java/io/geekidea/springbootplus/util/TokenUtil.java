@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2019-2029 geekidea(https://github.com/geekidea)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,16 +23,7 @@ package io.geekidea.springbootplus.util;
 public class TokenUtil {
 
     /**
-     * 生成token
-     * @return
-     */
-    public static String generatetoken(){
-        String token = "x-auth-token:" + UUIDUtil.getUUID();
-        return token;
-    }
-
-    /**
-     * 生成token
+     *
      * @return
      */
     public static String generateFirstLoginRestPwdToken(){

@@ -9,10 +9,10 @@
 
 <p align="center">  
   <a href="https://github.com/geekidea/spring-boot-plus/">
-    <img alt="spring-boot-plus version" src="https://img.shields.io/badge/spring--boot--plus-1.2.3--RELEASE-blue">
+    <img alt="spring-boot-plus version" src="https://img.shields.io/badge/spring--boot--plus-1.3.1.RELEASE-blue">
   </a>
   <a href="https://github.com/spring-projects/spring-boot">
-    <img alt="spring boot version" src="https://img.shields.io/badge/spring%20boot-2.1.8.RELEASE-brightgreen">
+    <img alt="spring boot version" src="https://img.shields.io/badge/spring%20boot-2.1.9.RELEASE-brightgreen">
   </a>
   <a href="https://www.apache.org/licenses/LICENSE-2.0">
     <img alt="code style" src="https://img.shields.io/badge/license-Apache%202-4EB1BA.svg?style=flat-square">
@@ -40,7 +40,7 @@
 - Integrated mybatis-plus fast dao operation
 - Quickly generate background code:entity/param/vo/controller/service/mapper/xml
 - Integrated swagger2, automatic generation of api documents
-- Integrated JWT, spring security permission control
+- Integrated JWT,Shiro/Spring security permission control
 - Integrated Redis、spring cache、ehcache,etc
 - Integrated Rabbit/Rocket/Kafka MQ
 - Integration alibaba druid connection pool, JDBC performance and slow query detection
@@ -60,8 +60,8 @@ Redis | 3.2+ |  |
 ### Technology stack 
 Component| Version |  Remark
 -|-|-
-Spring Boot | 2.1.8.RELEASE | Latest release stable version |
-Spring Framework | 5.1.9.RELEASE | Latest release stable version |
+Spring Boot | 2.1.9.RELEASE | Latest release stable version |
+Spring Framework | 5.1.10.RELEASE | Latest release stable version |
 Mybatis | 3.5.2 | DAO Framework |
 Mybatis Plus | 3.2.0 | mybatis Enhanced framework |
 Alibaba Druid | 1.1.20 | Data source |
@@ -73,9 +73,11 @@ commons-codec | 1.13 | Apache Toolkit such as encryption and decryption |
 commons-collections4 | 4.4 | Apache collections toolkit |
 reflections | 0.9.11 | Reflection Toolkit  |
 hibernate-validator | 6.0.17.Final | Validator toolkit |
-jwt | 0.9.1 | JSON WEB TOKEN |
-hutool-all | 4.6.4 | Common toolset |
+Shiro | 1.4.1 | Permission control |
+JWT | 3.8.3 | JSON WEB TOKEN |
+hutool-all | 4.6.10 | Common toolset |
 lombok | 1.18.8 | Automatically plugs |
+mapstruct | 1.3.0.Final | Object property replication tool |
 
 ## CHANGELOG
 #### [CHANGELOG.md](https://github.com/geekidea/spring-boot-plus/blob/master/CHANGELOG.md)
@@ -102,27 +104,36 @@ mvn clean package -Plocal
 
 ### 1. Create Table
 ```sql
+
 -- ----------------------------
 -- Table structure for sys_user
 -- ----------------------------
 drop table if exists `sys_user`;
-create table sys_user(
-    id          bigint                              not null comment 'id',
-    name        varchar(20)                         null comment 'name',
-    account     varchar(20)                         not null comment 'account',
-    pwd         varchar(20)                         not null comment 'password',
-    remark      varchar(200)                        null comment 'remark',
-    create_time timestamp default CURRENT_TIMESTAMP null comment 'create time',
-    update_time timestamp                           null comment 'update time',
-    primary key (`id`),
-    constraint sys_user_account_uindex
-        unique (account)
-) comment 'SystemUser';
+create table sys_user
+(
+    id          bigint                              not null comment ''
+        primary key,
+    username    varchar(20)                         not null comment '',
+    nickname    varchar(20)                         null comment '',
+    password    varchar(64)                         not null comment '',
+    salt        varchar(32)                         null comment '',
+    remark      varchar(200)                        null comment '',
+    status      int       default 1                 not null comment '',
+    create_time timestamp default CURRENT_TIMESTAMP null comment '',
+    update_time timestamp                           null comment '',
+    constraint sys_user_username_uindex
+        unique (username)
+)
+    comment 'SysUser';
+
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO sys_user (id, name, account, pwd, remark, create_time, update_time) VALUES (1, 'Administrator', 'admin', '123456', 'Administrator Account', '2019-08-26 00:52:01', null);
+INSERT INTO spring_boot_plus.sys_user (id, username, nickname, password, salt, remark, status, create_time, update_time) 
+    VALUES (1, 'admin', 'Administrators', '751ade2f90ceb660cb2460f12cc6fe08268e628e4607bdb88a00605b3d66973c', 'e4cc3292e3ebc483998adb2c0e4e640e', 'Administrator Account', 1, '2019-08-26 00:52:01', null);
 
+INSERT INTO spring_boot_plus.sys_user (id, username, nickname, password, salt, remark, status, create_time, update_time) 
+    VALUES (2, 'test', 'Testers', '751ade2f90ceb660cb2460f12cc6fe08268e628e4607bdb88a00605b3d66973c', '99952b31c18156169a26bec80fd211f6', 'Tester Account', 1, '2019-10-05 14:04:27', null);
 
 ```
 
@@ -298,16 +309,10 @@ tail -f -n 1000 /root/spring-boot-plus-server/logs/spring-boot-plus.log
 ```
 
 
-## spring-boot-plus Video  :movie_camera: 
+## spring-boot-plus Videos  :movie_camera: 
+- [5-Minutes-Finish-CRUD](https://www.bilibili.com/video/av67401204)
 - [CentOS Quick Installation JDK/Git/Maven/Redis/MySQL](https://www.bilibili.com/video/av67218836/)
 - [CentOS Quick Build / Deploy / Launch Spring-boot-plus Project](https://www.bilibili.com/video/av67218970/)
-
-
-## Contact
-- Email: [springbootplus@aliyun.com](mailto:springbootplus@aliyun.com)
-- QQ Group
-
-![spring-boot-plus QQ Group](https://raw.githubusercontent.com/geekidea/spring-boot-plus/master/docs/img/spring-boot-plus-qq-group.png)
 
 
 ## License

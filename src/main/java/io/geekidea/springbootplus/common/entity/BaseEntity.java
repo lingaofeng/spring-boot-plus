@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2019-2029 geekidea(https://github.com/geekidea)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@ import io.swagger.annotations.ApiModel;
 import java.io.Serializable;
 
 /**
+ * 实体父类
  * @author geekidea
  * @date 2018-11-08
  */

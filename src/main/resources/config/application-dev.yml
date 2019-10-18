@@ -5,9 +5,6 @@ spring-boot-plus:
   request-log-format: true
   # 响应日志在控制台是否格式化输出，local环境建议开启，服务器环境设置为false
   response-log-format: true
-  # 登录设置
-  login:
-    token-valid-time: 60  # 登录token失效时间，单位分钟
 
 server:
   port: 8888
@@ -30,3 +27,8 @@ spring:
 # logback.xml中有详细的日志配置
 logging:
   file: logs/spring-boot-plus-log.log
+
+# 打印SQL语句和结果集，本地开发环境可开启，线上注释掉
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

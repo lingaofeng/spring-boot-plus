@@ -9,10 +9,10 @@
 
 <p align="center">  
   <a href="https://github.com/geekidea/spring-boot-plus/">
-    <img alt="spring-boot-plus version" src="https://img.shields.io/badge/spring--boot--plus-1.2.3--RELEASE-blue">
+    <img alt="spring-boot-plus version" src="https://img.shields.io/badge/spring--boot--plus-1.3.1.RELEASE-blue">
   </a>
   <a href="https://github.com/spring-projects/spring-boot">
-    <img alt="spring boot version" src="https://img.shields.io/badge/spring%20boot-2.1.8.RELEASE-brightgreen">
+    <img alt="spring boot version" src="https://img.shields.io/badge/spring%20boot-2.1.9.RELEASE-brightgreen">
   </a>
   <a href="https://www.apache.org/licenses/LICENSE-2.0">
     <img alt="code style" src="https://img.shields.io/badge/license-Apache%202-4EB1BA.svg?style=flat-square">
@@ -38,7 +38,7 @@
 2. 集成mybatis plus快速dao操作
 3. 快速生成后台代码: entity/param/vo/controller/service/mapper/xml
 4. 集成swagger2，可自动生成api文档
-5. 集成jwt、spring security权限控制
+5. 集成jwt、shiro/spring security权限控制
 6. 集成redis、spring cache、ehcache缓存
 7. 集成rabbit/rocket/kafka mq消息队列
 8. 集成druid连接池，JDBC性能和慢查询检测
@@ -58,8 +58,8 @@ Redis | 3.2+ |  |
 ### 技术选型 
 技术 | 版本 |  备注
 -|-|-
-Spring Boot | 2.1.8.RELEASE | 最新发布稳定版 |
-Spring Framework | 5.1.9.RELEASE | 最新发布稳定版 |
+Spring Boot | 2.1.9.RELEASE | 最新发布稳定版 |
+Spring Framework | 5.1.10.RELEASE | 最新发布稳定版 |
 Mybatis | 3.5.2 | 持久层框架 |
 Mybatis Plus | 3.2.0 | mybatis增强框架 |
 Alibaba Druid | 1.1.20 | 数据源 |
@@ -71,9 +71,11 @@ commons-codec | 1.13 | 加密解密等工具包 |
 commons-collections4 | 4.4 | 集合工具包 |
 reflections | 0.9.11 | 反射工具包 |
 hibernate-validator | 6.0.17.Final | 后台参数校验注解 |
-jwt | 0.9.1 | json web token |
-hutool-all | 4.6.4 | 常用工具集 |
+Shiro | 1.4.1 | 权限控制 |
+JWT | 3.8.3 | JSON WEB TOKEN |
+hutool-all | 4.6.10 | 常用工具集 |
 lombok | 1.18.8 | 注解生成Java Bean等工具 |
+mapstruct | 1.3.0.Final | 对象属性复制工具 |
 
 ## CHANGELOG
 #### [CHANGELOG.md](https://github.com/geekidea/spring-boot-plus/blob/master/CHANGELOG.md)
@@ -100,27 +102,35 @@ mvn clean package -Plocal
 
 ### 1. 创建数据库表
 ```sql
+
 -- ----------------------------
 -- Table structure for sys_user
 -- ----------------------------
 drop table if exists `sys_user`;
-create table sys_user(
-    id          bigint                              not null comment '主键',
-    name        varchar(20)                         null comment '用户名称',
-    account     varchar(20)                         not null comment '账号',
-    pwd         varchar(20)                         not null comment '密码',
-    remark      varchar(200)                        null comment '备注',
+create table sys_user
+(
+    id          bigint                              not null comment '主键'
+        primary key,
+    username    varchar(20)                         not null comment '用户名',
+    nickname    varchar(20)                         null comment '昵称',
+    password    varchar(64)                         not null comment '密码',
+    salt        varchar(32)                         null comment '盐值',
+    remark      varchar(200)                        null comment 'remark',
+    status      int       default 1                 not null comment '状态，0：禁用，1：启用',
     create_time timestamp default CURRENT_TIMESTAMP null comment '创建时间',
     update_time timestamp                           null comment '修改时间',
-    primary key (`id`),
-    constraint sys_user_account_uindex
-        unique (account)
-) comment '系统用户';
+    constraint sys_user_username_uindex
+        unique (username)
+)
+    comment '系统用户';
+
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO sys_user (id, name, account, pwd, remark, create_time, update_time) VALUES (1, 'Administrator', 'admin', '123456', 'Administrator Account', '2019-08-26 00:52:01', null);
-
+INSERT INTO spring_boot_plus.sys_user (id, username, nickname, password, salt, remark, status, create_time, update_time) 
+    VALUES (1, 'admin', '管理员', '751ade2f90ceb660cb2460f12cc6fe08268e628e4607bdb88a00605b3d66973c', 'e4cc3292e3ebc483998adb2c0e4e640e', 'Administrator Account', 1, '2019-08-26 00:52:01', null);
+INSERT INTO spring_boot_plus.sys_user (id, username, nickname, password, salt, remark, status, create_time, update_time) 
+    VALUES (2, 'test', '测试人员', '751ade2f90ceb660cb2460f12cc6fe08268e628e4607bdb88a00605b3d66973c', '99952b31c18156169a26bec80fd211f6', 'Tester Account', 1, '2019-10-05 14:04:27', null);
 
 ```
 
@@ -293,6 +303,7 @@ tail -f -n 1000 /root/spring-boot-plus-server/logs/spring-boot-plus.log
 ```
 
 ## spring-boot-plus 视频  :movie_camera:
+- [5分钟完成增删改查](https://www.bilibili.com/video/av67401204)
 - [CentOS 快速安装 JDK/Git/Maven/Redis/MySQL](https://www.bilibili.com/video/av67218836/)
 - [CentOS 快速部署/构建/打包/运行项目](https://www.bilibili.com/video/av67218970/)
 
